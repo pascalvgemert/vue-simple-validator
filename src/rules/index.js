@@ -1,6 +1,7 @@
 import Alpha from "./alpha";
 import AlphaNumeric from "./alphaNumeric";
 import Between from "./between";
+import Email from "./email";
 import Float from "./float";
 import Integer from "./integer";
 import Length from "./length";
