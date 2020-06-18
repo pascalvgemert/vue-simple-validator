@@ -31,7 +31,7 @@ export default class Validator {
             'url': new Rules.Url(),
         };
 
-        this.failureMessages = {
+        this.errorMessages = {
             'alpha': '{field} must only contain alphabetical (A-z) characters.',
             'alpha_numeric': '{field} must only contain alphanumeric (A-z, 0-9) characters.',
             'between': '{field} must be between {minimum} and {maximum}.',
@@ -60,6 +60,15 @@ export default class Validator {
     errors() {
         return this.errorBag;
     }
+
+    /**
+     * See if the current error bag contains any errors.
+     *
+     * @returns {Boolean}
+     */
+    failed() {
+        return this.errorBag.any();
+    },
 
     /**
      * @param {String} ruleName
@@ -102,10 +111,28 @@ export default class Validator {
     }
 
     /**
-     * @param {Object} failureMessages
+     * @param {String} fieldName
+     * @param {String} fieldRule
      */
-    setFailureMessages(failureMessages) {
-        Object.assign(this.failureMessages, failureMessages);
+    reportFailure(fieldName, fieldRule) {
+        // Build and store failure message based on field value + field rule.
+        let ruleSequence = fieldRule.split(':'),
+            ruleName = ruleSequence[0] || ''
+            ruleParams = (ruleSequence[1] || 'null').split(','),
+            rule = this.getRule(ruleName),
+            rawMessage = this.failureMessages[ruleName] || '{field} is invalid.',
+            message = rule
+                ? rule.failureMessage(rawMessage, fieldName, ruleParams)
+                : 'Could not retrieve error message';
+
+        this.errorBag.add(fieldName, message);
+    }
+
+    /**
+     * @param {Object} errorMessages
+     */
+    setErrorMessages(errorMessages) {
+        Object.assign(this.errorMessages, errorMessages);
     }
 
     /**
@@ -135,24 +162,6 @@ export default class Validator {
     }
 
     /**
-     * @param {String} fieldName
-     * @param {String} fieldRule
-     */
-    reportFailure(fieldName, fieldRule) {
-        // Build and store failure message based on field value + field rule.
-        let ruleSequence = fieldRule.split(':'),
-            ruleName = ruleSequence[0] || ''
-            ruleParams = ruleSequence[1] || '',
-            rule = this.getRule(ruleName),
-            rawMessage = this.failureMessages[ruleName] || '{field} is invalid.',
-            message = rule
-                ? rule.failureMessage(rawMessage, fieldName, ruleParams)
-                : 'Could not retrieve error message';
-
-        this.errorBag.add(fieldName, message);
-    }
-
-    /**
      * @param {*} value
      * @param {String} rule
      * @param {Object} context
@@ -162,7 +171,7 @@ export default class Validator {
     validateValueAgainstRule(value, rule, context) {
         let ruleSequence = rule.split(':'),
             ruleName = ruleSequence[0] || null,
-            ruleParams = (ruleSequence[1] || 'null').split(',');
+            ruleParams = (ruleSequence[1] || 'null').split(','),
             ruleInstance = getRule(ruleName);
 
         if (!rule) {
