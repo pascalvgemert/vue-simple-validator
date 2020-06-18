@@ -35,7 +35,7 @@ export default class ErrorBag {
      * @returns {Boolean}
      */
     any() {
-        return this.all().length > 0;
+        return this.count() > 0;
     }
 
     /**
@@ -44,7 +44,7 @@ export default class ErrorBag {
      * @returns {Number}
      */
     count() {
-        return this.all().length || 0;
+        return Object.keys(this.all()).length || 0;
     }
 
     /**

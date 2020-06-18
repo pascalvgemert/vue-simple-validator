@@ -68,7 +68,7 @@ export default class Validator {
      * @returns {Boolean}
      */
     failed() {
-        return this.errorBag.any();
+        return this.errors().any();
     }
 
     /**

@@ -15,7 +15,7 @@ import Slug from "./slug";
 import String from "./string";
 import Url from "./url";
 
-export default {
+export {
     Alpha,
     AlphaNumeric,
     Between,

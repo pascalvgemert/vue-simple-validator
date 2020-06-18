@@ -3,8 +3,8 @@ export default class Rule {
      * Abstract class constructor
      */
     constructor() {
-        if (new.target === Abstract) {
-            throw new TypeError('Cannot construct Abstract instances directly.');
+        if (new.target === Rule) {
+            throw new TypeError('Cannot construct Rule instances directly.');
         }
     }
 

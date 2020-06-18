@@ -1,4 +1,4 @@
-import Validator from './Validator';
+import Validator from './validator';
 
 export default {
     install (Vue, options) {
@@ -10,13 +10,7 @@ export default {
             validator.setErrorMessages(options.errorMessages);
         }
 
-        // Set validator global methods
-        Vue.prototype.$validator = {
-            errors: validator.errors,
-            failed: validator.failed,
-            registerRule: validator.registerRule,
-            setErrorMessages: validator.setErrorMessages,
-            validate: validator.validate,
-        }
+        // Set validator
+        Vue.prototype.$validator = validator;
     }
 };
