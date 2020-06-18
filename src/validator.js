@@ -1,3 +1,4 @@
+import ErrorBag from './errorBag';
 import Helpers from './helpers';
 import * as Rules from './rules';
 
@@ -7,7 +8,7 @@ export default class Validator {
      * Validator constructor
      */
     constructor() {
-        this.failures = [];
+        this.errorBag = new ErrorBag();
 
         this.ruleInstances = {
             'alpha': new Rules.Alpha(),
@@ -56,8 +57,8 @@ export default class Validator {
     /**
      * @returns {Object}
      */
-    getFailures() {
-        return this.failures || {};
+    errors() {
+        return this.errorBag;
     }
 
     /**
@@ -114,21 +115,23 @@ export default class Validator {
      * @returns {Boolean}
      */
     validate(context, rules) {
-        this.failures = [];
+        // When validating start with a new ErrorBag
+        this.errorBag = new ErrorBag();
 
         Object.entries(rules).forEach(([fieldName, fieldRules]) => {
             let fieldValue = Helpers.getFieldValueFromContext(context, fieldName),
-                fieldRules = typeof fieldRules === 'string' ? fieldRules.split(',') : fieldRules;
+                fieldRules = typeof fieldRules === 'string' ? fieldRules.split('|') : fieldRules;
 
             for (fieldRule of fieldRules) {
-                // Validate field rule, continue is succeeds.
+                // Validate field rule, report the error and break our of the field rules for loop when an error is found.
                 if (!this.validateValueAgainstRule(fieldValue, fieldRule, context)) {
                     this.reportFailure(fieldName, fieldRule);
+                    break;
                 }
             }
         });
 
-        return failedRules.length === 0;
+        return this.errorBag.any();
     }
 
     /**
@@ -141,12 +144,12 @@ export default class Validator {
             ruleName = ruleSequence[0] || ''
             ruleParams = ruleSequence[1] || '',
             rule = this.getRule(ruleName),
-            message = this.failureMessages[ruleName] || '{field} is invalid.';
+            rawMessage = this.failureMessages[ruleName] || '{field} is invalid.',
+            message = rule
+                ? rule.failureMessage(rawMessage, fieldName, ruleParams)
+                : 'Could not retrieve error message';
 
-        this.failures[fieldName] = this.failures[fieldName] || [];
-        this.failures[fieldName][ruleName] = rule
-            ? rule.failureMessage(message, fieldName, ruleParams)
-            : 'Could not retrieve error message';
+        this.errorBag.add(fieldName, message);
     }
 
     /**
