@@ -1,6 +1,6 @@
 {
   "name": "vue-simple-validator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "An easy to use Validator for Vue components and any kind of objects based on the Laravel Validator.",
   "keywords": [
     "vue simple validator",
