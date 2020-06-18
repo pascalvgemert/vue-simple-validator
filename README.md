@@ -7,7 +7,7 @@ An easy to use Validator for Vue components and any kind of objects based on Lar
 
 ### Installation  
 ```sh
-$ npm install --save vue-notification
+$ npm install --save vue-simple-validator
 ```
 
 ```js
