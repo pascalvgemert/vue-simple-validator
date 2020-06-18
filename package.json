@@ -1,7 +1,19 @@
 {
   "name": "vue-simple-validator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An easy to use Validator for Vue components and any kind of objects based on the Laravel Validator.",
+  "keywords": [
+    "vue simple validator",
+    "vue simple validation",
+    "vue validator",
+    "vue validation",
+    "simple validator",
+    "vue laravel validator",
+    "vue laravel validation",
+    "vue component validation",
+    "vue form validation",
+    "vue data validation"
+  ],
   "author": "Pascal van Gemert <pascal@pascalvangemert.nl>",
   "private": false,
   "license": "GPL-3.0",
