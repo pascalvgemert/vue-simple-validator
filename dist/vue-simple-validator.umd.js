@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.VueValidator = {}));
+  (global = global || self, factory(global.VueSimpleValidator = {}));
 }(this, (function (exports) { 'use strict';
 
   function _typeof(obj) {
@@ -1175,6 +1175,7 @@
         errors: validator.errors,
         failed: validator.failed,
         registerRule: validator.registerRule,
+        setErrorMessages: validator.setErrorMessages,
         validate: validator.validate
       };
     }

@@ -1169,6 +1169,7 @@ var index = {
       errors: validator.errors,
       failed: validator.failed,
       registerRule: validator.registerRule,
+      setErrorMessages: validator.setErrorMessages,
       validate: validator.validate
     };
   }

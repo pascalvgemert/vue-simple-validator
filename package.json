@@ -1,5 +1,5 @@
 {
-  "name": "vue-validator",
+  "name": "vue-simple-validator",
   "version": "0.1.0",
   "description": "An easy to use Validator for Vue components and any kind of objects based on the Laravel Validator.",
   "author": "Pascal van Gemert <pascal@pascalvangemert.nl>",
@@ -7,13 +7,13 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/pascalvgemert/vue-validator.git"
+    "url": "git://github.com/pascalvgemert/vue-simple-validator.git"
   },
-  "main": "dist/vue-validator.umd.js",
-  "module": "dist/vue-validator.esm.js",
-  "unpkg": "dist/vue-validator.min.js",
+  "main": "dist/vue-simple-validator.umd.js",
+  "module": "dist/vue-simple-validator.esm.js",
+  "unpkg": "dist/vue-simple-validator.min.js",
   "browser": {
-    "./sfc": "src/vue-validator.vue"
+    "./sfc": "src/vue-simple-validator.vue"
   },
   "files": [
     "dist/*",
@@ -27,9 +27,9 @@
   },
   "scripts": {
     "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
-    "build:umd": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format umd --file dist/vue-validator.umd.js",
-    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es --file dist/vue-validator.esm.js",
-    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife --file dist/vue-validator.min.js"
+    "build:umd": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format umd --file dist/vue-simple-validator.umd.js",
+    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es --file dist/vue-simple-validator.esm.js",
+    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife --file dist/vue-simple-validator.min.js"
   },
   "dependencies": {
     "vue": "^2.6.10"
