@@ -8,7 +8,7 @@ export default class Validator {
      * Validator constructor
      */
     constructor() {
-        this.errorBag = new ErrorBag();
+        this.errorBag = new ErrorBag({});
 
         this.ruleInstances = {
             'alpha': new Rules.Alpha(),
@@ -24,7 +24,8 @@ export default class Validator {
             'max': new Rules.MaxValue(),
             'min': new Rules.MinValue(),
             'numeric': new Rules.Numeric(),
-            'required_if': new Rules.NumericIf(),
+            'required': new Rules.Required(),
+            'required_if': new Rules.RequiredIf(),
             'required_without': new Rules.RequiredWithout(),
             'slug': new Rules.Slug(),
             'string': new Rules.String(),
@@ -68,7 +69,7 @@ export default class Validator {
      */
     failed() {
         return this.errorBag.any();
-    },
+    }
 
     /**
      * @param {String} ruleName
@@ -88,24 +89,22 @@ export default class Validator {
     /**
      * @param {String} ruleName
      * @param {Object} rule
-     * @param {String|null} failureMessage
+     * @param {String|null} errorMessage
      */
-    registerRule (ruleName, rule, failureMessage) {
-        if (typeof ruleName !== 'String') {
+    registerRule (ruleName, rule, errorMessage) {
+        if (typeof ruleName !== 'string') {
             throw 'The rule name should be a string';
-            return false;
         }
 
         // @todo Improve check
         if (typeof rule !== 'object') {
             throw `The rule object must be an object.`;
-            return false;
         }
 
-        failureMessage = failureMessage || '{field} is invalid.',
+        errorMessage = errorMessage || '{field} is invalid.';
 
-        ruleInstances[ruleName] = rule;
-        failureMessages[ruleName] = failureMessage;
+        this.ruleInstances[ruleName] = rule;
+        this.errorMessages[ruleName] = errorMessage;
 
         return true;
     }
@@ -117,10 +116,10 @@ export default class Validator {
     reportFailure(fieldName, fieldRule) {
         // Build and store failure message based on field value + field rule.
         let ruleSequence = fieldRule.split(':'),
-            ruleName = ruleSequence[0] || ''
+            ruleName = ruleSequence[0] || '',
             ruleParams = (ruleSequence[1] || 'null').split(','),
             rule = this.getRule(ruleName),
-            rawMessage = this.failureMessages[ruleName] || '{field} is invalid.',
+            rawMessage = this.errorMessages[ruleName] || '{field} is invalid.',
             message = rule
                 ? rule.failureMessage(rawMessage, fieldName, ruleParams)
                 : 'Could not retrieve error message';
@@ -143,13 +142,14 @@ export default class Validator {
      */
     validate(context, rules) {
         // When validating start with a new ErrorBag
-        this.errorBag = new ErrorBag();
+        this.errorBag = new ErrorBag({});
 
         Object.entries(rules).forEach(([fieldName, fieldRules]) => {
-            let fieldValue = Helpers.getFieldValueFromContext(context, fieldName),
-                fieldRules = typeof fieldRules === 'string' ? fieldRules.split('|') : fieldRules;
+            let fieldValue = Helpers.getFieldValueFromContext(context, fieldName);
 
-            for (fieldRule of fieldRules) {
+            fieldRules = typeof fieldRules === 'string' ? fieldRules.split('|') : fieldRules;
+
+            for (let fieldRule of fieldRules) {
                 // Validate field rule, report the error and break our of the field rules for loop when an error is found.
                 if (!this.validateValueAgainstRule(fieldValue, fieldRule, context)) {
                     this.reportFailure(fieldName, fieldRule);
@@ -172,7 +172,7 @@ export default class Validator {
         let ruleSequence = rule.split(':'),
             ruleName = ruleSequence[0] || null,
             ruleParams = (ruleSequence[1] || 'null').split(','),
-            ruleInstance = getRule(ruleName);
+            ruleInstance = this.getRule(ruleName);
 
         if (!rule) {
             return false;

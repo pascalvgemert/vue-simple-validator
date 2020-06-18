@@ -6,15 +6,16 @@ export default {
         const validator = new Validator();
 
         // Apply options
-        if (typeof options.failureMessages === 'Object') {
-            validator.setFailureMessages(options.failureMessages);
+        if (typeof options.errorMessages === 'object') {
+            validator.setErrorMessages(options.errorMessages);
         }
 
         // Set validator global methods
         Vue.prototype.$validator = {
-            validate: validator.validate,
-            failures: validator.getFailures,
+            errors: validator.errors,
+            failed: validator.failed,
             registerRule: validator.registerRule,
+            validate: validator.validate,
         }
     }
 };
