@@ -6,7 +6,7 @@ export default {
         const validator = new Validator();
 
         // Apply options
-        if (typeof options.errorMessages === 'object') {
+        if (options && typeof options.errorMessages === 'object') {
             validator.setErrorMessages(options.errorMessages);
         }
 
